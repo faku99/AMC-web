@@ -1,5 +1,5 @@
 (function() {
-  var app = angular.module('flapperNews', ['ui.router']);
+  var app = angular.module('AMCweb', ['ui.router']);
 
   app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider

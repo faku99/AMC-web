@@ -10,7 +10,7 @@ require('./models/posts');
 require('./models/comments');
 require('./models/users');
 require('./config/passport');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/AMC-web');
 
 var passport = require('passport');
 
