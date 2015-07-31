@@ -3,7 +3,7 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
 var UserSchema = new mongoose.Schema({
-  username: {type: String, lowercase: true, unique: true},
+  username: {type: String, unique: true},
   hash: String,
   salt: String
 });
@@ -20,14 +20,16 @@ UserSchema.methods.validPassword = function(password) {
 };
 
 UserSchema.methods.generateJWT = function() {
+  //On souhaite que le token expire au bout de 60 jours
   var today = new Date();
   var exp = new Date(today);
   exp.setDate(today.getDate() + 60);
 
+  //TODO: Changer le 'SECRET' pour quelque chose de plus compliqué et surtout le stocker hors du programme
   return jwt.sign({
     _id: this._id,
     username: this.username,
-    exp: parseInt(exp.getTime() / 1000)
+    exp: parseInt(exp.getTime() / 1000),
   }, 'SECRET');
 };
 

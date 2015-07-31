@@ -1,0 +1,32 @@
+<div class="page-header">
+  <h2> Connexion </h2>
+</div>
+
+<div ng-show="error" class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 alert alert-danger">
+    <span> {{ error.message }} </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <form ng-submit="logIn()">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input class="form-control" type="text" id="username" placeholder="Nom d'utilisateur" ng-model="user.username">
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input class="form-control" type="password" id="password" placeholder="Mot de passe" ng-model="user.password">
+      </div>
+      <br>
+      <center>
+        <button type="submit" class="btn btn-default">Se connecter</button>
+        <small>ou <a href="/#/register">enregistrez-vous</a></small>
+      </center>
+    </form>
+  </div>
+</div>

@@ -6,13 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
-require('./models/posts');
-require('./models/comments');
-require('./models/users');
-require('./config/passport');
-mongoose.connect('mongodb://localhost/AMC-web');
-
 var passport = require('passport');
+
+require('./models/Questions');
+require('./models/Users');
+require('./config/passport');
+
+mongoose.connect('mongodb://localhost/AMC-web');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -30,7 +30,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(passport.initialize());
 
 app.use('/', routes);
@@ -66,7 +65,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 
 module.exports = app;

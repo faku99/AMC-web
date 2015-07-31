@@ -1,0 +1,39 @@
+<div ng-show="isLoggedIn()">
+  <div class="page-header">
+    <h2>Questions</h2>
+  </div>
+  <div class="row">
+    <div class="questions">
+      <div ng-repeat="question in questions" ng-show="currentUser().username === question.author">
+        <div class="col-md-9">
+          {{ question.title }}
+        </div>
+        <div class="col-md-2">
+          <small> créée par <a>{{ question.author }}</a></small>
+        </div>
+        <div class="col-md-1">
+          <span> <a href="#/questions/{{ question._id }}">Voir</a> </span>
+        </div>
+        <div class="col-md-12" ng-show="createSeparator({{ $index }})"><hr /></div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <div class="page-header">
+    <h3>Créer une question</h3>
+  </div>
+  <form class="form-inline row" ng-submit="addQuestion()">
+    <div class="col-md-6">
+      <input class="form-control col-md-6" type="text" id="title" placeholder="Titre" ng-model="title">&nbsp;
+      <button class="btn btn-default" type="submit">Créer</button>
+    </div>
+  </form>
+</div>
+
+<div ng-hide="isLoggedIn()">
+  <center>
+    <div style="margin-top: 100px;">
+      <h2>Vous devez vous <a href="#/login">connecter</a> pour accéder au contenu du site</h2>
+    </div>
+  </center>
+</div>
