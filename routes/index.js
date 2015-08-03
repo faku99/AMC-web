@@ -43,8 +43,11 @@ router.post('/questions', auth, function(req, res, next) {
 
 /* POST registration page */
 router.post('/register', function(req, res, next) {
-  if(!req.body.username || !req.body.password) {
+  if(!req.body.username || !req.body.password1 || !req.body.password2) {
     return res.status(400).json({ message: 'Veuillez remplir tous les champs' });
+  }
+  if(req.body.password1 != req.body.password2) {
+    return res.status(400).json({ message: 'Les mots de passe ne correspondent pas' });
   }
 
   var user = new User();
