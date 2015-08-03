@@ -11,6 +11,7 @@ var Question = mongoose.model('Question');
 
 var passport = require('passport');
 var User = mongoose.model('User');
+var Tag = mongoose.model('Tag');
 
 var jwt = require('express-jwt');
 var auth = jwt({ secret: 'SECRET', userProperty: 'payload' });
@@ -27,6 +28,30 @@ router.get('/questions', function(req, res, next) {
 /* GET single question */
 router.get('/questions/:question', function(req, res, next) {
   res.json(req.question);
+});
+
+/* GET tags */
+router.get('/tags/:tag', function(req, res, next) {
+  res.json(req.tag);
+});
+
+router.post('/tags', function(req, res, next) {
+  console.log("/tags POST: " + req.body);
+  var tag = new Tag(req.body);
+
+  tag.save(function(err, tag) {
+    if(err) { return next(err); }
+
+    res.json(tag);
+  });
+});
+
+router.get('/tags', function(req, res, next) {
+  Tag.find(function(err, tags) {
+    if(err) { return next(err); }
+
+    res.json(tags);
+  });
 });
 
 /* POST questions page */
@@ -91,5 +116,16 @@ router.param('question', function(req, res, next, id) {
   });
 });
 
+router.param('tag', function(req, res, next, name) {
+  var query = Tag.find({ name: new RegExp(name, "i")});
+
+  query.exec(function(err, tag) {
+    if(err) { return next(err); }
+    if(!tag) { return next(); }
+
+    req.tag = tag;
+    return next();
+  });
+});
 
 module.exports = router;

@@ -1,4 +1,4 @@
-var app = angular.module('AMC-web', ['ui.router']);
+var app = angular.module('AMC-web', ['ui.router', 'ngTagsInput']);
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 

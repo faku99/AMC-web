@@ -1,6 +1,5 @@
 angular.module('AMC-web').factory('questions', [
-  '$http',
-  'auth',
+  '$http', 'auth',
   function($http, auth) {
     var o = {
       questions: []

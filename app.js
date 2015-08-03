@@ -10,6 +10,7 @@ var passport = require('passport');
 
 require('./models/Questions');
 require('./models/Users');
+require('./models/Tags');
 require('./config/passport');
 
 mongoose.connect('mongodb://localhost/AMC-web');
