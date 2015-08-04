@@ -2,11 +2,15 @@
   width: 100%;
 }
 
-.questions {
-  margin-left: 10px;
-  font-size: 16px;
+.table-vcenter td, th {
+   vertical-align: middle !important;
 }
 
 textarea {
-  width: 100%;
+  resize: vertical;
+}
+
+a.sort {
+  cursor: pointer;
+  text-decoration: none;
 }

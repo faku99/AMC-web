@@ -1,19 +1,28 @@
-angular.module('AMC-web').factory('tags', [
-  '$http', 'auth',
-  function($http, auth) {
-    var o = {
-      allTags: [],
-      currentTag: {}
+(function() {
+  angular
+    .module('AMC-web')
+    .factory('tags', Tags);
+
+  Tags.$inject = ['$http', 'auth'];
+
+  /*
+   * Tags Service.
+   */
+  function Tags($http, auth) {
+    var service = {
+      allTags: []
     };
 
+    /* On initialise service.allTags dès l'appel du service */
     $http.get('/tags').success(function(data) {
       for(var i in data) {
-        o.allTags[i] = data[i].name;
+        service.allTags[i] = data[i].name;
       }
     });
 
-    o.createTag = function(tag) {
-      var tagExists = (o.allTags.indexOf(tag.name) > -1);
+    /* On ajoute, s'il n'existe pas déjà, le tag à la base de données */
+    service.createTag = function(tag) {
+      var tagExists = (service.allTags.indexOf(tag.name) > -1);
 
       if(!tagExists) {
         $http.post('/tags', tag, {
@@ -22,6 +31,7 @@ angular.module('AMC-web').factory('tags', [
       }
     };
 
-    return o;
+    return service;
   }
-]);
+
+})();

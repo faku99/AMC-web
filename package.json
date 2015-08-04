@@ -25,6 +25,6 @@
   "description": "AMC web implementation",
   "main": "app.js",
   "devDependencies": {},
-  "author": "",
+  "author": "Lucas Elisei",
   "license": "ISC"
 }

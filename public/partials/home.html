@@ -1,24 +1,59 @@
+<!DOCTYPE html>
+
 <div ng-show="isLoggedIn()">
+
   <div class="page-header">
     <h2>Questions</h2>
   </div>
-  <div class="row">
-    <div class="questions">
-      <div ng-repeat="question in questions" ng-show="currentUser().username === question.author">
-        <div class="col-md-9">
-          {{ question.title }}
+
+  <table class="table table-hover table-vcenter table-striped">
+    <tr>
+      <th>
+        <a ng-click="sortType = 'title'; sortReverse = !sortReverse" class="sort">
+          Titre
+          <span ng-show="sortType == 'title' && !sortReverse" class="glyphicon glyphicon-sort-by-alphabet"></span>
+          <span ng-show="sortType == 'title' && sortReverse" class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+        </a>
+      </th>
+      <th>
+        <a ng-click="sortType = 'date'; sortReverse = !sortReverse" class="sort">
+          Date
+          <span ng-show="sortType == 'date' && !sortReverse" class="glyphicon glyphicon-sort-by-order"></span>
+          <span ng-show="sortType == 'date' && sortReverse" class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a>
+      </th>
+      <th>Tags</th>
+      <th class="col-xs-2">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Rechercher" ng-model="searchString">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+          </span>
         </div>
-        <div class="col-md-2">
-          <small> créée par <a>{{ question.author }}</a></small>
+      </th>
+    </tr>
+
+    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchString" ng-show="currentUser().username === question.author">
+      <td>{{ question.title }}</td>
+      <td>{{ question.date }}</td>
+      <td>
+        <div ng-repeat="tag in question.tags | orderBy:'+'">
+          <span class="label label-default">{{ tag }}</span>
         </div>
-        <div class="col-md-1">
-          <span> <a href="#/questions/{{ question._id }}">Voir</a> </span>
-        </div>
-        <div class="col-md-12" ng-show="createSeparator({{ $index }})"><hr /></div>
-      </div>
-    </div>
-  </div>
-  <br><br>
+      </td>
+      <td>
+        <center>
+          <a href="#/questions/{{ question._id }}" class="btn btn-primary">Voir</a>
+          &nbsp;
+          <a href="#/question/{{ question._id }}/edit"><span class="glyphicon glyphicon-pencil"></span></a>
+          &nbsp;
+          <a href="#/question/{{ question._id }}/remove"><span class="glyphicon glyphicon-remove" style="color: #E31010;"></span></a>
+        </center>
+      </td>
+    </tr>
+  </table>
+
+  <br>
   <div class="page-header">
     <h3>Créer une question</h3>
   </div>

@@ -1,30 +1,44 @@
-angular.module('AMC-web').factory('questions', [
-  '$http', 'auth',
-  function($http, auth) {
-    var o = {
+(function() {
+  angular
+    .module('AMC-web')
+    .factory('questions', Questions);
+
+  Questions.$inject = ['$http', 'auth'];
+
+  /*
+   * Questions Service.
+   */
+  function Questions($http, auth) {
+    var service = {
       questions: []
     };
 
-    o.getAll = function() {
+    /* Permet d'obtenir toutes les questions */
+    service.getAll = function() {
       return $http.get('/questions').success(function(data) {
-        angular.copy(data, o.questions);
+        angular.copy(data, service.questions);
       });
     };
 
-    o.create = function(question) {
+    /* Permet de créer une question. Utilisée dans MainController. */
+    service.create = function(question) {
       return $http.post('/questions', question, {
         headers: { Authorization: 'Bearer ' + auth.getToken() }
-      }).success(function(data) {
-        o.questions.push(data);
+      })
+      .success(function(data) {
+        service.questions.push(data);
       });
     };
 
-    o.get = function(id) {
-      return $http.get('/questions/' + id).then(function(res) {
-        return res.data;
-      });
+    /* Permet d'obtenir une seule question en fonction de son identifiant */
+    service.get = function(id) {
+      return $http.get('/questions/' + id)
+        .then(function(res) {
+          return res.data;
+        });
     };
 
-    return o;
+    return service;
   }
-]);
+
+})();

@@ -13,7 +13,12 @@ require('./models/Users');
 require('./models/Tags');
 require('./config/passport');
 
-mongoose.connect('mongodb://localhost/AMC-web');
+/* Choix de la base de données (Locale ou Heroku) */
+if(process.env.HEROKU === "true") {
+  mongoose.connect(process.env.MONGOLAB_URI);
+} else {
+  mongoose.connect('mongodb://localhost/AMC-web');
+}
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

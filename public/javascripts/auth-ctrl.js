@@ -1,8 +1,17 @@
-angular.module('AMC-web').controller('AuthCtrl', [
-  '$scope', '$state', 'auth',
-  function($scope, $state, auth) {
+(function() {
+  angular
+    .module('AMC-web')
+    .controller('AuthCtrl', AuthCtrl);
+
+  AuthCtrl.$inject = ['$scope', '$state', 'auth'];
+
+  /*
+   * Authentification Controller.
+   */
+  function AuthCtrl($scope, $state, auth) {
     $scope.user = {};
 
+    /* Permet de s'enregister */
     $scope.register = function() {
       auth.register($scope.user).error(function(error) {
         $scope.error = error;
@@ -11,6 +20,7 @@ angular.module('AMC-web').controller('AuthCtrl', [
       });
     };
 
+    /* Permet de se logger */
     $scope.logIn = function() {
       auth.logIn($scope.user).error(function(error) {
         $scope.error = error;
@@ -18,5 +28,7 @@ angular.module('AMC-web').controller('AuthCtrl', [
         $state.go('home');
       });
     };
+
   }
-]);
+
+})();

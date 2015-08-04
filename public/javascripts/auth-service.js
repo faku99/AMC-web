@@ -1,16 +1,24 @@
-angular.module('AMC-web').factory('auth', [
-  '$http', '$window',
-  function($http, $window) {
+(function() {
+  angular
+    .module('AMC-web')
+    .factory('auth', AuthFactory);
+
+  AuthFactory.$inject = ['$http', '$window'];
+
+  function AuthFactory($http, $window) {
     var auth = {};
 
+    /* Sauvegarde le token de l'utilisateur */
     auth.saveToken = function(token) {
       $window.localStorage['amc-web-token'] = token;
     };
 
+    /* Retourne le token actuel */
     auth.getToken = function() {
       return $window.localStorage['amc-web-token'];
     };
 
+    /* Retourne 'true' si l'utilisateur est loggé, 'false' sinon. */
     auth.isLoggedIn = function() {
       var token = auth.getToken();
 
@@ -23,6 +31,7 @@ angular.module('AMC-web').factory('auth', [
       }
     };
 
+    /* Retourne les informations de l'utilisateur actuel */
     auth.currentUser = function() {
       if(auth.isLoggedIn()) {
         var token = auth.getToken();
@@ -32,22 +41,26 @@ angular.module('AMC-web').factory('auth', [
       }
     };
 
+    /* Permet de s'enregister */
     auth.register = function(user) {
       return $http.post('/register', user).success(function(data) {
         auth.saveToken(data.token);
       });
     };
 
+    /* Permet de se logger */
     auth.logIn = function(user) {
       return $http.post('/login', user).success(function(data) {
         auth.saveToken(data.token);
       });
     };
 
+    /* Permet de se délogger */
     auth.logOut = function() {
       $window.localStorage.removeItem('amc-web-token');
     };
 
     return auth;
   }
-]);
+
+})();
