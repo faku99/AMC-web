@@ -37,6 +37,16 @@
       $scope.tags = [];
     };
 
+    $scope.removeQuestion = function(question) {
+      questions.remove(question);
+
+      var index = $scope.questions.indexOf(question);
+
+      if(index > -1) {
+        $scope.questions.splice(index, 1);
+      }
+    };
+
     /* Charge tous les tags connus. Nécessaire à l'auto-completion */
     $scope.loadTags = function(query) {
       return $http.get('/tags/' + query);

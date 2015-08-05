@@ -30,6 +30,18 @@
       });
     };
 
+    /* Permet de supprimer une question. */
+    service.remove = function(question) {
+      return $http.put('/questions/' + question._id + '/remove')
+        .success(function(data) {
+          var index = service.questions.indexOf(question);
+
+          if(index > -1) {
+            service.questions.splice(index, 1);
+          }
+        });
+    };
+
     /* Permet d'obtenir une seule question en fonction de son identifiant */
     service.get = function(id) {
       return $http.get('/questions/' + id)

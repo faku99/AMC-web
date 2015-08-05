@@ -20,4 +20,8 @@ var QuestionSchema = new mongoose.Schema({
   tags: [{ type: String }]
 });
 
+QuestionSchema.methods.delete = function(question) {
+  this.remove();
+};
+
 mongoose.model('Question', QuestionSchema);

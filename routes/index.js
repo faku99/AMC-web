@@ -103,6 +103,14 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
+router.put('/questions/:question/remove', function(req, res, next) {
+  req.question.delete(function(err, question) {
+    if(err) { return next(err); }
+
+    res.json(question);
+  });
+});
+
 /* PARAM questions */
 router.param('question', function(req, res, next, id) {
   var query = Question.findById(id);
