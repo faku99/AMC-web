@@ -16,10 +16,10 @@
         </a>
       </th>
       <th>
-        <a ng-click="sortType = 'date'; sortReverse = !sortReverse" class="sort">
+        <a ng-click="sortType = 'seconds'; sortReverse = !sortReverse" class="sort">
           Date
-          <span ng-show="sortType == 'date' && !sortReverse" class="glyphicon glyphicon-sort-by-order"></span>
-          <span ng-show="sortType == 'date' && sortReverse" class="glyphicon glyphicon-sort-by-order-alt"></span>
+          <span ng-show="sortType == 'seconds' && !sortReverse" class="glyphicon glyphicon-sort-by-order"></span>
+          <span ng-show="sortType == 'seconds' && sortReverse" class="glyphicon glyphicon-sort-by-order-alt"></span>
         </a>
       </th>
       <th>Tags</th>
@@ -33,7 +33,7 @@
       </th>
     </tr>
 
-    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchString" ng-show="currentUser().username === question.author">
+    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchFilter" ng-show="currentUser().username === question.author">
       <td>{{ question.title }}</td>
       <td>{{ question.date }}</td>
       <td>

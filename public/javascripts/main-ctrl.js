@@ -13,7 +13,7 @@
     $scope.isLoggedIn = auth.isLoggedIn;
     $scope.currentUser = auth.currentUser;
     $scope.tags = [];
-    $scope.sortType = 'date';
+    $scope.sortType = 'seconds';
     $scope.sortReverse = true;
     $scope.searchString = '';
 
@@ -28,6 +28,7 @@
         author: auth.currentUser().username,
         public: false,
         date: $scope.localeDate(),
+        seconds: new Date().getTime(),
         tags: fetchTags($scope.tags)
       });
 
@@ -51,6 +52,16 @@
       var minutes = ('0' + date.getMinutes()).slice(-2);
 
       return day + "/" + month + "/" + year + " à " + hours + ":" + minutes;
+    };
+
+    /* Filtre utilisé lors de la recherche. On décide d'omettre la recherche par
+     *  auteur et par secondes écoulées après le 1 janvier 1970.
+     */
+    $scope.searchFilter = function(obj) {
+      var filter = new RegExp($scope.searchString, 'i');
+
+      return !$scope.searchString || filter.test(obj.title) ||
+        filter.test(obj.tags) || filter.test(obj.date);
     };
 
     /* Permet de vérifier si un tag existe déjà ou pas.

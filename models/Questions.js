@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
  *  author  :   Auteur de la question.
  *  public  :   'true' si la question est visible par tout le monde, 'false' sinon.
  *  date    :     La date à laquelle a été créée la question.
+ *  seconds :   Les secondes écoulées depuis le 1 janvier 1970. Permet de trier
+                  les questions convaneblement.
  *  tags    :   Les tags de la question.
  */
 var QuestionSchema = new mongoose.Schema({
@@ -14,6 +16,7 @@ var QuestionSchema = new mongoose.Schema({
   author: String,
   public: Boolean,
   date: String,
+  seconds: Number,
   tags: [{ type: String }]
 });
 
