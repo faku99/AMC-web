@@ -16,8 +16,11 @@ var QuestionSchema = new mongoose.Schema({
   author: String,
   public: Boolean,
   date: String,
-  seconds: Number,
-  tags: [{ type: String }]
+  seconds: Date,
+  tags: [{ type: String }],
+  type: String,
+  answers: [{ type: String }],
+  corrects: [{ type: Number }]
 });
 
 QuestionSchema.methods.delete = function(question) {

@@ -22,6 +22,7 @@
 
     /* Permet de créer une question. Utilisée dans MainController. */
     service.create = function(question) {
+      console.log("Question :", question);
       return $http.post('/questions', question, {
         headers: { Authorization: 'Bearer ' + auth.getToken() }
       })
@@ -32,14 +33,9 @@
 
     /* Permet de supprimer une question. */
     service.remove = function(question) {
-      return $http.put('/questions/' + question._id + '/remove')
-        .success(function(data) {
-          var index = service.questions.indexOf(question);
-
-          if(index > -1) {
-            service.questions.splice(index, 1);
-          }
-        });
+      return $http.put('/questions/' + question._id + '/remove', null, {
+        headers: {Authorization: 'Bearer ' + auth.getToken()}
+      });
     };
 
     /* Permet d'obtenir une seule question en fonction de son identifiant */

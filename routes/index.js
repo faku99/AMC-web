@@ -56,13 +56,17 @@ router.get('/tags', function(req, res, next) {
 
 /* POST questions page */
 router.post('/questions', auth, function(req, res, next) {
+  if(!req.body.title || req.body.title === '') {
+    return res.status(400).json({ message: 'Veuillez donner un titre à votre question '});
+  }
+  
   var question = new Question(req.body);
   question.author = req.payload.username;
 
   question.save(function(err, question) {
     if(err) { return next(err); }
 
-    res.json(question);
+    return res.json(question);
   });
 });
 
@@ -129,7 +133,7 @@ router.param('tag', function(req, res, next, name) {
 
   query.exec(function(err, tag) {
     if(err) { return next(err); }
-    if(!tag) { return next(); }
+    if(!tag) { return next(new Error('Impossible de trouver le tag demandé')); }
 
     req.tag = tag;
     return next();

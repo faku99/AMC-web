@@ -3,6 +3,144 @@
 <div ng-show="isLoggedIn()">
 
   <div class="page-header">
+    <h3>
+      Créer une question
+      <div class="pull-right">
+        <div class="dropdown">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span ng-show="questionType === '';">Type de la question</span>
+            <span ng-show="questionType != '';">{{ questionType }}</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="type in questionTypes">
+              <a ng-click="ddSelectType(type)" class="dd-type">{{ type }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </h3>
+  </div>
+
+  <div ng-show="error" class="row">
+    <div class="col-md-offset-4 col-md-4 alert alert-danger">
+      <center><span> {{ error.message }} </span></center>
+    </div>
+  </div>
+
+  <form class="form-horizontal" ng-submit="addQuestion()">
+    <div class="form-group">
+      <label for="title" class="col-sm-1 control-label">Titre</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" type="text" id="title" rows="1" ng-model="title"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="tags" class="col-sm-1 control-label">Tags</label>
+      <div class="col-sm-10">
+        <tags-input ng-model="tags">
+          <auto-complete source="loadTags($query)"></auto-complete>
+        </tags-input>
+      </div>
+    </div>
+    <br>
+
+    <!-- Ne s'affiche que si le type de la question n'a pas été choisi -->
+    <div class="control-group" ng-show="questionType === ''">
+      <label class="col-sm-1 control-label">Réponses</label>
+      <div class="col-sm-10 controls">
+        <p class="form-control-static">Veuillez choisir le type de la question !</p>
+      </div>
+    </div>
+
+    <!-- Si la question est de type 'QCM' -->
+    <div class="form-group" ng-show="questionType === 'QCM'" id="QCM">
+      <label for="answers" class="col-md-1 control-label">Réponses</label>
+      <div id="answers" class="col-md-10">
+        <div class="input-group" ng-repeat="answer in answers" style="padding-bottom: 5px;">
+
+            <span class="input-group-btn">
+              <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
+                <font color="red" ng-show="answer.correct === 'Fausse'">{{ answer.correct }}</font>
+                <font color="green" ng-show="answer.correct === 'Juste'">{{ answer.correct }}</font>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dd-type" ng-click="answer.correct = 'Juste'">Juste</a></li>
+                <li><a class="dd-type" ng-click="answer.correct = 'Fausse'">Fausse</a></li>
+              </ul>
+            </span>
+            <input type="text" class="form-control" ng-model="answer.title">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="answers.splice($index, 1)">
+                <span class="glyphicon glyphicon-remove remove"></span>
+              </button>
+            </span>
+
+        </div>
+
+
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
+              {{ answer.correct }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dd-type" ng-click="answer.correct = 'Juste'">Juste</a></li>
+              <li><a class="dd-type" ng-click="answer.correct = 'Fausse'">Fausse</a></li>
+            </ul>
+          </span>
+          <input type="text" class="form-control" ng-model="answer.title" ng-keyup="$event.keyCode == 13 && addAnswer()">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="addAnswer()">
+              <span class="glyphicon glyphicon-plus" style="color: #22BF22"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Si la question est de type 'Vrai/Faux' -->
+    <div class="col-md-offset-5 col-md-4" ng-show="questionType === 'Vrai/Faux'">
+      <div class="radio radio-inline radio-success col-md-2">
+        <input type="radio" ng-model="vfAnswer" id="radio-true" value=0>
+        <label for="radio-true">
+          Vrai
+        </label>
+      </div>
+      <div class="radio radio-inline radio-danger col-md-2">
+        <input type="radio" ng-model="vfAnswer" id="radio-false" value=1>
+        <label for="radio-false">
+          Faux
+        </label>
+      </div>
+      <br><br>
+    </div>
+
+    <!-- Si la question est de type 'ouverte' -->
+    <div class="col-md-offset-4 col-md-4" ng-show="questionType === 'Question ouverte'">
+      <center>
+        <h3>
+          <font color="red">Not implemented yet.</font>
+        </h3>
+      </center>
+    </div>
+
+
+    <br>
+
+    <!-- Ne s'affiche que si le type de la question a été choisi -->
+    <div class="form-group" ng-show="questionType != ''">
+      <div class="col-sm-offset-1 col-sm-10">
+        <button class="btn btn-primary" type="submit">Créer</button>
+      </div>
+    </div>
+
+  </form>
+
+  <br>
+
+  <div class="page-header">
     <h2>Questions</h2>
   </div>
 
@@ -46,39 +184,12 @@
         <center>
           <a href="#/questions/{{ question._id }}" class="btn btn-primary">Voir</a>
           &nbsp;
-          <a href="#/question/{{ question._id }}/edit"><span class="glyphicon glyphicon-pencil edit" title="Modifier"></span></a>
-          &nbsp;
           <a ng-click="removeQuestion(question)"><span class="glyphicon glyphicon-remove remove" title="Supprimer"></span></a>
         </center>
       </td>
     </tr>
   </table>
 
-  <br>
-  <div class="page-header">
-    <h3>Créer une question</h3>
-  </div>
-  <form class="form-horizontal" ng-submit="addQuestion()">
-    <div class="form-group">
-      <label for="title" class="col-sm-1 control-label">Titre</label>
-      <div class="col-sm-10">
-        <textarea class="form-control" type="text" id="title" rows="1" ng-model="title"></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="tags" class="col-sm-1 control-label">Tags</label>
-      <div class="col-sm-10">
-        <tags-input ng-model="tags">
-          <auto-complete source="loadTags($query)"></auto-complete>
-        </tags-input>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-1 col-sm-10">
-        <button class="btn btn-primary" type="submit">Créer</button>
-      </div>
-    </div>
-  </form>
 </div>
 
 <div ng-hide="isLoggedIn()">

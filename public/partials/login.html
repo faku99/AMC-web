@@ -5,15 +5,13 @@
 </div>
 
 <div ng-show="error" class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4 alert alert-danger">
-    <span> {{ error.message }} </span>
+  <div class="col-md-offset-4 col-md-4 alert alert-danger">
+    <center><span> {{ error.message }} </span></center>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4">
+  <div class="col-md-offset-4 col-md-4">
 
     <form ng-submit="logIn()">
       <div class="form-group">
@@ -31,6 +29,6 @@
         <small>ou <a href="/#/register">enregistrez-vous</a></small>
       </center>
     </form>
-    
+
   </div>
 </div>
