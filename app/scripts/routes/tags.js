@@ -12,18 +12,17 @@ var Tag = mongoose.model('Tag');
 
 router.get('/', function(req, res, next) {
   Tag.find(function(err, tags) {
-    if(err) { return next(err); }
+    if (err) { return next(err); }
 
     res.json(tags);
   });
 });
 
-
 router.post('/', function(req, res, next) {
   var tag = new Tag(req.body);
 
   tag.save(function(err, tag) {
-    if(err) { return next(err); }
+    if (err) { return next(err); }
 
     res.json(tag);
   });
@@ -34,11 +33,13 @@ router.get('/:tag', function(req, res) {
 });
 
 router.param('tag', function(req, res, next, name) {
-  var query = Tag.find({ name: new RegExp(name, 'i')});
+  var query = Tag.find({name: new RegExp(name, 'i')});
 
   query.exec(function(err, tag) {
-    if(err) { return next(err); }
-    if(!tag) { return next(new Error('Impossible de trouver le tag demandé')); }
+    if (err) { return next(err); }
+    if (!tag) {
+      return next(new Error('Impossible de trouver le tag demandé'));
+    }
 
     req.tag = tag;
     return next();

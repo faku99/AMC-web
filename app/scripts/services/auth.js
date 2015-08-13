@@ -18,7 +18,7 @@ angular.module('AMC-web')
     auth.isLoggedIn = function() {
       var token = auth.getToken();
 
-      if(token) {
+      if (token) {
         var payload = JSON.parse($window.atob(token.split('.')[1]));
 
         return payload.exp > Date.now() / 1000;
@@ -29,7 +29,7 @@ angular.module('AMC-web')
 
     /* Retourne les informations de l'utilisateur actuel */
     auth.currentUser = function() {
-      if(auth.isLoggedIn()) {
+      if (auth.isLoggedIn()) {
         var token = auth.getToken();
         var payload = JSON.parse($window.atob(token.split('.')[1]));
 
@@ -46,9 +46,10 @@ angular.module('AMC-web')
 
     /* Permet de se logger */
     auth.logIn = function(user) {
-      return $http.post('http://localhost:3000/login', user).success(function(data) {
-        auth.saveToken(data.token);
-      });
+      return $http.post('http://localhost:3000/login', user)
+        .success(function(data) {
+          auth.saveToken(data.token);
+        });
     };
 
     /* Permet de se délogger */

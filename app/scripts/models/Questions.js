@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 
 /*
@@ -17,13 +19,13 @@ var QuestionSchema = new mongoose.Schema({
   public: Boolean,
   date: String,
   seconds: Date,
-  tags: [{ type: String }],
+  tags: [{type: String}],
   type: String,
-  answers: [{ type: String }],
-  corrects: [{ type: Number }]
+  answers: [{type: String}],
+  corrects: [{type: Number}]
 });
 
-QuestionSchema.methods.delete = function(question) {
+QuestionSchema.methods.delete = function() {
   this.remove();
 };
 

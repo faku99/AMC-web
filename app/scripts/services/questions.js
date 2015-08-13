@@ -20,7 +20,7 @@ angular.module('AMC-web')
     /* Permet de créer une question. Utilisée dans MainController. */
     service.create = function(question) {
       return $http.post('/questions', question, {
-        headers: { Authorization: 'Bearer ' + auth.getToken() }
+        headers: {Authorization: 'Bearer ' + auth.getToken()}
       })
       .success(function(data) {
         service.questions.push(data);

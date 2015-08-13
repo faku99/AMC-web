@@ -53,7 +53,7 @@ angular.module('AMC-web')
     };
 
     $scope.addAnswer = function() {
-      if(!$scope.answer.title || $scope.answer.title === '') { return; }
+      if (!$scope.answer.title || $scope.answer.title === '') { return; }
 
       $scope.answers.push($scope.answer);
       $scope.answer = {
@@ -67,7 +67,7 @@ angular.module('AMC-web')
 
       var index = $scope.questions.indexOf(question);
 
-      if(index > -1) {
+      if (index > -1) {
         $scope.questions.splice(index, 1);
       }
     };
@@ -107,7 +107,7 @@ angular.module('AMC-web')
     function fetchTags(qTags) {
       var toReturn = [];
 
-      for(var i in qTags) {
+      for (var i in qTags) {
         var currentTag = qTags[i];
 
         tags.createTag(currentTag);
@@ -120,12 +120,11 @@ angular.module('AMC-web')
     function getAnswers() {
       var toReturn = [];
 
-      if($scope.questionType === 'Vrai/Faux') {
+      if ($scope.questionType === 'Vrai/Faux') {
         toReturn.push('Vrai');
         toReturn.push('Faux');
-      }
-      else if($scope.questionType === 'QCM') {
-        for(var i in $scope.answers) {
+      } else if ($scope.questionType === 'QCM') {
+        for (var i in $scope.answers) {
           toReturn.push($scope.answers[i].title);
         }
       }
@@ -136,14 +135,13 @@ angular.module('AMC-web')
     function correctAnswers(qAnswers) {
       var toReturn = [];
 
-      if($scope.questionType === 'Vrai/Faux') {
+      if ($scope.questionType === 'Vrai/Faux') {
         toReturn.push($scope.vfAnswer);
-      }
-      else if($scope.questionType === 'QCM') {
-        for(var i in qAnswers) {
+      } else if ($scope.questionType === 'QCM') {
+        for (var i in qAnswers) {
           var currentAnswer = qAnswers[i];
 
-          if(currentAnswer.correct === 'Juste') {
+          if (currentAnswer.correct === 'Juste') {
             toReturn.push(i);
           }
         }
@@ -152,6 +150,8 @@ angular.module('AMC-web')
       return toReturn;
     }
 
-    $(':input').not('textarea').not('button').keypress(function(event) { return event.keyCode !== 13; });
+    $(':input').not('textarea').not('button').keypress(function(event) {
+      return event.keyCode !== 13;
+    });
   }
 );

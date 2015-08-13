@@ -12,7 +12,7 @@ angular.module('AMC-web')
 
     /* On initialise service.allTags dès l'appel du service */
     $http.get('/tags').success(function(data) {
-      for(var i in data) {
+      for (var i in data) {
         service.allTags[i] = data[i].name;
       }
     });
@@ -21,9 +21,9 @@ angular.module('AMC-web')
     service.createTag = function(tag) {
       var tagExists = (service.allTags.indexOf(tag.name) > -1);
 
-      if(!tagExists) {
+      if (!tagExists) {
         $http.post('/tags', tag, {
-          headers: { Authorization: 'Bearer ' + auth.getToken() }
+          headers: {Authorization: 'Bearer ' + auth.getToken()}
         });
       }
     };
