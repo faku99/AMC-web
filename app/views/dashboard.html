@@ -7,14 +7,14 @@
        <div class="text-center">
         <h2 class="brand">AMC-web</h2>
         <img src="images/flat-avatar.png" class="user-avatar" /><br />
+        <span>Bienvenue {{ currentUser().username }}</span><br /><br />
         <a ui-sref="login" class="btn btn-white btn-outline btn-rounded btn-sm">Se déconnecter</a>
       </div>
 
       <ul class="nav nav-sidebar">
         <li ng-class="{active: $state.includes('create')}"><a ui-sref="create">Créer une question <span class="sr-only">(current)</span></a></li>
-        <li ng-class="{active: $state.includes('list')}"><a ui-sref="list">Liste</a></li>
+        <li ng-class="{active: $state.includes('list') || $state.includes('question')}"><a ui-sref="list">Liste</a></li>
         <li ng-class="{active: $state.includes('test')}"><a ui-sref="test">Tests</a></li>
-        <li><a href="http://www.strapui.com/ani-angularjs-theme">Ani Theme Premium Edition</a></li>
       </ul>
 
     </div>

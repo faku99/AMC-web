@@ -5,41 +5,45 @@
  */
 
 angular.module('AMC-web')
-  .factory('questions', function($http, auth) {
+  .factory('questions', function(auth, requests) {
     var service = {
       questions: []
     };
 
-    /* Permet d'obtenir toutes les questions */
-    service.getAll = function() {
-      return $http.get('/questions').success(function(data) {
-        angular.copy(data, service.questions);
-      });
-    };
-
     /* Permet de créer une question. Utilisée dans MainController. */
     service.create = function(question) {
-      return $http.post('/questions', question, {
-        headers: {Authorization: 'Bearer ' + auth.getToken()}
-      })
-      .success(function(data) {
-        service.questions.push(data);
-      });
+      return requests.post('/question/create', question).then(
+        function(result) {
+          service.questions.push(result.data);
+        }
+      );
     };
 
-    /* Permet de supprimer une question. */
-    service.remove = function(question) {
-      return $http.put('/questions/' + question._id + '/remove', null, {
-        headers: {Authorization: 'Bearer ' + auth.getToken()}
-      });
+    service.edit = function(question) {
+      return requests.post('/question/edit', question);
     };
 
     /* Permet d'obtenir une seule question en fonction de son identifiant */
     service.get = function(id) {
-      return $http.get('/questions/' + id)
-        .then(function(res) {
-          return res.data;
-        });
+      return requests.get('/question/' + id).then(
+        function(result) {
+          return result.data;
+        }
+      );
+    };
+
+    /* Permet d'obtenir toutes les questions */
+    service.getAll = function() {
+      return requests.get('/question/all').then(
+        function(result) {
+          angular.copy(result.data, service.questions);
+        }
+      );
+    };
+
+    /* Permet de supprimer une question. */
+    service.remove = function(question) {
+      return requests.put('/question/' + question._id + '/remove');
     };
 
     return service;

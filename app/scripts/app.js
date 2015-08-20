@@ -1,18 +1,12 @@
 'use strict';
 
-/**
- * @ngdoc overview
- * @name AMC-web
- * @description
- * # Web implementation of AMC.
- *
- * Main module of the application.
- */
 angular
   .module('AMC-web', [
     'ui.router',
     'ngAnimate',
-    'ngTagsInput'
+    'ngTagsInput',
+    'ui.bootstrap',
+    'cgPrompt'
   ])
   .config(function($stateProvider, $urlRouterProvider) {
 
@@ -29,13 +23,13 @@ angular
           url: '/login',
           parent: 'base',
           templateUrl: 'views/login.html',
-          controller: 'LoginCtrl'
+          controller: 'AuthCtrl'
         })
         .state('register', {
           url: '/register',
           parent: 'base',
           templateUrl: 'views/register.html',
-          controller: 'LoginCtrl'
+          controller: 'AuthCtrl'
         })
         .state('dashboard', {
           url: '/dashboard',
@@ -47,13 +41,13 @@ angular
             url: '/create',
             parent: 'dashboard',
             templateUrl: 'views/dashboard/create.html',
-            controller: 'MainCtrl'
+            controller: 'CreateCtrl'
           })
           .state('list', {
             url: '/list',
             parent: 'dashboard',
             templateUrl: 'views/dashboard/list.html',
-            controller: 'MainCtrl',
+            controller: 'ListCtrl',
             resolve: {
               postPromise: function(questions) {
                 return questions.getAll();
@@ -64,7 +58,7 @@ angular
             url: '/question/{questionId}',
             parent: 'dashboard',
             templateUrl: 'views/dashboard/question.html',
-            controller: 'QuestionsCtrl',
+            controller: 'QuestionCtrl',
             resolve: {
               question: function(questions, $stateParams) {
                 return questions.get($stateParams.questionId);
@@ -75,7 +69,7 @@ angular
             url: '/test',
             parent: 'dashboard',
             templateUrl: 'views/dashboard/test.html',
-            controller: 'TestsCtrl'
+            controller: 'TestCtrl'
           });
 
   });

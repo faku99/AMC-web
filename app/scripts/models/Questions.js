@@ -14,15 +14,22 @@ var mongoose = require('mongoose');
  *  tags    :   Les tags de la question.
  */
 var QuestionSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  public: Boolean,
-  date: String,
-  seconds: Date,
-  tags: [{type: String}],
-  type: String,
-  answers: [{type: String}],
-  corrects: [{type: Number}]
+  title       : String,
+  author      : String,
+  public      : Boolean,
+  plaincDate  : String,
+  cDate       : Date,
+  plainmDate  : String,
+  mDate       : Date,
+  tags        : [String],
+  type        : String,
+  answers     : [
+    {
+      title   : String,
+      correct : Boolean,
+      points  : Number
+    }
+  ]
 });
 
 QuestionSchema.methods.delete = function() {

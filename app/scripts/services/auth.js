@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('AMC-web')
+
+  //Cannot use 'requests' service because of circular dependency
   .factory('auth', function($http, $window) {
+
     var auth = {};
 
     /* Sauvegarde le token de l'utilisateur */
@@ -39,14 +42,15 @@ angular.module('AMC-web')
 
     /* Permet de s'enregister */
     auth.register = function(user) {
-      return $http.post('/register', user).success(function(data) {
-        auth.saveToken(data.token);
-      });
+      return $http.post('/register', user)
+        .success(function(data) {
+          auth.saveToken(data.token);
+        });
     };
 
     /* Permet de se logger */
     auth.logIn = function(user) {
-      return $http.post('http://localhost:3000/login', user)
+      return $http.post('/login', user)
         .success(function(data) {
           auth.saveToken(data.token);
         });

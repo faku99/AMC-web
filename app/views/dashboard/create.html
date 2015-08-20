@@ -5,79 +5,102 @@
 	<div class="jumbotron">
 		<div class="container">
 
-			<h3>
-				Créer une question
-				<!-- Bouton pour choisir le type de la question -->
-				<div class="pull-right">
-	        <div class="dropdown">
-	          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-	            <span ng-show="questionType === '';">Type de la question</span>
-	            <span ng-show="questionType != '';">{{ questionType }}</span>
-	            <span class="caret"></span>
-	          </button>
-	          <ul class="dropdown-menu">
-	            <li ng-repeat="type in questionTypes">
-	              <a ng-click="ddSelectType(type)" class="dd-type">{{ type }}</a>
-	            </li>
-	          </ul>
-	        </div>
-	      </div>
-			</h3>
-
-			<br>
-
 			<!-- Zone d'erreur qui s'affiche seulement quand il y a une erreur -->
-			<div ng-show="error" class="row">
-		    <div class="col-md-offset-4 col-md-4 alert alert-danger">
+			<div ng-show="error">
+		    <div class="col-lg-offset-4 col-lg-4 alert alert-danger">
 		      <center><span> {{ error.message }} </span></center>
 		    </div>
 		  </div>
 
+			<!-- Zone de succès qui s'affiche seulement si la question a bien été créée -->
+			<div ng-show="successMessage">
+				<div class="col-lg-offset-4 col-lg-4 alert alert-success">
+					<center><span> {{ successMessage }} </span></center>
+				</div>
+			</div>
+
 			<!-- Form pour créer une question -->
-			<form class="form-horizontal" ng-submit="addQuestion()">
-		    <div class="form-group">
-		      <label for="title" class="col-sm-1 control-label">Titre</label>
-		      <div class="col-sm-10">
-		        <textarea class="form-control" type="text" id="title" rows="1" ng-model="title"></textarea>
+			<form class="form-horizontal col-lg-12" ng-submit="createQuestion()" name="form" novalidate>
+
+				<!-- Titre -->
+		    <div class="form-group has-feedback">
+		      <label class="col-lg-1 control-label">Titre</label>
+
+		      <!--<div class="col-lg-10" ng-class="{
+							'has-error': form.title.$invalid && form.title.$touched,
+							'has-success': !form.title.$invalid }">
+
+		        <textarea class="form-control" type="text" name="title" rows="1"
+											ng-model="question.title" required>
+						</textarea>
+
+						<span class="glyphicon form-control-feedback" ng-class="{
+							'glyphicon-remove': form.title.$invalid && form.title.$touched,
+							'glyphicon-ok': !form.title.$invalid }">
+						</span>
+
 		      </div>
+
+					<div class="col-lg-offset-1 col-lg-10" ng-show="form.$submitted || form.title.$touched">
+						<span class="text-danger" ng-show="form.title.$error.required">Veuillez donner un titre à votre question</span>
+					</div>-->
+
+					<div class="col-lg-10">
+						<textarea class="form-control" type="text" name="title" rows="1" ng-model="question.title" required></textarea>
+					</div>
+
 		    </div>
+
+				<!-- Tags -->
 		    <div class="form-group">
 		      <label for="tags" class="col-sm-1 control-label">Tags</label>
 		      <div class="col-sm-10">
-		        <tags-input ng-model="tags">
+		        <tags-input ng-model="question.tags">
 		          <auto-complete source="loadTags($query)"></auto-complete>
 		        </tags-input>
 		      </div>
 		    </div>
-		    <br>
 
-		    <!-- Ne s'affiche que si le type de la question n'a pas été choisi -->
-		    <div class="control-group" ng-show="questionType === ''">
-					<center>
-		        <p class="form-control-static">Veuillez choisir le type de la question</p>
-					</center>
+				<br />
+
+				<!-- Type -->
+		    <div class="form-group">
+					<label for="dropdown" class="col-lg-1 control-label"></label>
+		      <div class="dropdown col-lg-10">
+		        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		        	<span ng-hide="question.type">Type de la question</span>
+		          <span ng-show="question.type">{{ question.type }}</span>
+		          <span class="caret"></span>
+		        </button>
+						&nbsp;<span class="glyphicon glyphicon-ok text-success" ng-show="question.type"></span>
+		        <ul class="dropdown-menu">
+		          <li ng-repeat="type in questionTypes">
+		            <a ng-click="question.type = type" class="dd-type">{{ type }}</a>
+		          </li>
+		        </ul>
+		      </div>
 		    </div>
 
 		    <!-- Si la question est de type 'QCM' -->
-		    <div class="form-group" ng-show="questionType === 'QCM'" id="QCM">
+		    <div class="form-group" ng-show="question.type === 'QCM'" id="QCM" style="padding-top: 15px">
 		      <label for="answers" class="col-md-1 control-label">Réponses</label>
 		      <div id="answers" class="col-md-10">
-		        <div class="input-group" ng-repeat="answer in answers" style="padding-bottom: 5px;">
+		        <div class="input-group" ng-repeat="answer in question.answers" style="padding-bottom: 5px;">
 
 		            <span class="input-group-btn">
 		              <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
-		                <font color="red" ng-show="answer.correct === 'Fausse'">{{ answer.correct }}</font>
-		                <font color="green" ng-show="answer.correct === 'Juste'">{{ answer.correct }}</font>
+		                <font color="red" ng-hide="answer.correct">Fausse</font>
+		                <font color="green" ng-show="answer.correct">Juste</font>
 		                <span class="caret"></span>
 		              </button>
 		              <ul class="dropdown-menu">
-		                <li><a class="dd-type" ng-click="answer.correct = 'Juste'">Juste</a></li>
-		                <li><a class="dd-type" ng-click="answer.correct = 'Fausse'">Fausse</a></li>
+		                <li><a class="dd-type" ng-click="answer.correct = true">Juste</a></li>
+		                <li><a class="dd-type" ng-click="answer.correct = false">Fausse</a></li>
 		              </ul>
 		            </span>
 		            <input type="text" class="form-control" ng-model="answer.title">
 		            <span class="input-group-btn">
-		              <button class="btn btn-default" type="button" ng-click="answers.splice($index, 1)">
+		              <button class="btn btn-default" type="button" ng-click="deleteAnswer($index)">
 		                <span class="glyphicon glyphicon-remove remove"></span>
 		              </button>
 		            </span>
@@ -88,11 +111,11 @@
 		        <div class="input-group">
 		          <span class="input-group-btn">
 		            <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
-		              {{ answer.correct }} <span class="caret"></span>
+		              {{ getCorrect() }} <span class="caret"></span>
 		            </button>
 		            <ul class="dropdown-menu">
-		              <li><a class="dd-type" ng-click="answer.correct = 'Juste'">Juste</a></li>
-		              <li><a class="dd-type" ng-click="answer.correct = 'Fausse'">Fausse</a></li>
+		              <li><a class="dd-type" ng-click="answer.correct = true">Juste</a></li>
+		              <li><a class="dd-type" ng-click="answer.correct = false">Fausse</a></li>
 		            </ul>
 		          </span>
 		          <input type="text" class="form-control" ng-model="answer.title" ng-keyup="$event.keyCode == 13 && addAnswer()">
@@ -102,42 +125,72 @@
 		            </button>
 		          </span>
 		        </div>
+
+						<div class="text-warning" ng-show="showButton()">
+							Vous devez ajouter au moins une réponse juste et une réponse fausse
+						</div>
 		      </div>
 		    </div>
 
 		    <!-- Si la question est de type 'Vrai/Faux' -->
-		    <div class="col-md-offset-5 col-md-4" ng-show="questionType === 'Vrai/Faux'">
-		      <div class="radio radio-inline radio-success col-md-2">
-		        <input type="radio" ng-model="vfAnswer" id="radio-true" value="0">
-		        <label for="radio-true">
-		          Vrai
-		        </label>
+		    <div class="col-lg-offset-5 col-lg-4" ng-show="question.type === 'Vrai/Faux'" style="padding: 20px 0px;">
+		      <div class="radio radio-success radio-inline col-lg-2">
+		        <input type="radio" id="radioTrue" ng-model="VFAnswer" ng-value="true">
+		        <label for="radioTrue">Vrai</label>
 		      </div>
-		      <div class="radio radio-inline radio-danger col-md-2">
-		        <input type="radio" ng-model="vfAnswer" id="radio-false" value="1">
-		        <label for="radio-false">
-		          Faux
-		        </label>
+					<div class="col-lg-1"></div>
+		      <div class="radio radio-danger radio-inline col-lg-2">
+		        <input type="radio" id="radioFalse" ng-model="VFAnswer" ng-value="false">
+		        <label for="radioFalse">Faux</label>
 		      </div>
-		      <br><br>
 		    </div>
 
 		    <!-- Si la question est de type 'ouverte' -->
-		    <div class="col-md-offset-4 col-md-4" ng-show="questionType === 'Question ouverte'">
-		      <center>
-		        <h3>
-		          <font color="red">Not implemented yet.</font>
-		        </h3>
-		      </center>
+		    <div class="form-group" ng-show="question.type === 'Question ouverte'" style="padding-top: 15px">
+					<label for="bareme" class="col-lg-1 control-label">
+						Barème
+					</label>
+					<div id="bareme" class="col-lg-10" style="margin-left: -15px">
+						<div ng-repeat="answer in openAnswers | orderBy:'+points'" style="padding-bottom: 20px;">
+							<div class="col-lg-5">
+								<input type="text" class="form-control" ng-model="answer.title">
+							</div>
+							<div class="col-lg-offset-1 col-lg-6">
+								<label for="points" class="col-lg-2 control-label">
+									Points
+								</label>
+								<div id="points" class="col-lg-10">
+									<input type="number" class="form-control" ng-model="answer.points">
+								</div>
+							</div>
+							<br />
+						</div>
+						<div style="padding-top: 20px;">
+							<div class="col-lg-5">
+								<input type="text" class="form-control" ng-model="openAnswer.title" placeholder="Description">
+							</div>
+							<div class="col-lg-offset-1 col-lg-6">
+								<label for="nPoints" class="col-lg-2 control-label">
+									Points
+								</label>
+								<div id="nPoints" class="col-lg-6">
+									<input type="number" class="form-control" ng-model="openAnswer.points">
+								</div>
+								<div class="col-lg-4">
+									<button type="button" class="btn btn-primary pull-right" ng-click="addOpenAnswer()">Ajouter</button>
+								</div>
+							</div>
+						</div>
+					</div>
 		    </div>
 
 
 		    <br>
 
 		    <!-- Ne s'affiche que si le type de la question a été choisi -->
-		    <div class="form-group" ng-show="questionType != ''">
-		      <div class="col-sm-offset-1 col-sm-10">
-		        <button class="btn btn-primary" type="submit">Créer</button>
+		    <div class="form-group">
+		      <div class="col-lg-offset-1 col-lg-10">
+		        <button class="btn btn-primary" type="submit" ng-disabled="showButton()">Créer</button>
 		      </div>
 		    </div>
 
@@ -146,3 +199,14 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/ng-template" id="spin.html">
+	<input type="text" name="spin" class="form-control spinner-input">
+</script>
+
+<script>
+	$(':input').not('textarea').not('button').keypress(function(event) {
+		return event.keyCode !== 13;
+	});
+	$('.dropdown-toggle').dropdown();
+</script>

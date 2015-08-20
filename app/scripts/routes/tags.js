@@ -11,38 +11,36 @@ var mongoose = require('mongoose');
 var Tag = mongoose.model('Tag');
 
 router.get('/', function(req, res, next) {
-  Tag.find(function(err, tags) {
-    if (err) { return next(err); }
+  if(req.query.q) {
+    Tag.find({name: new RegExp(req.query.q, 'i')}, function(err, tag) {
+      if(err) { return next(err); }
 
-    res.json(tags);
-  });
+      res.json(tag);
+    });
+  } else {
+    Tag.find(function(err, tags) {
+      if (err) { return next(err); }
+
+      res.json(tags);
+    });
+  }
 });
 
 router.post('/', function(req, res, next) {
-  var tag = new Tag(req.body);
+  Tag.find({name: req.body.name}).then(function(docs) {
+    var alreadyExists = docs.length >= 1;
 
-  tag.save(function(err, tag) {
-    if (err) { return next(err); }
+    if (!alreadyExists) {
+      var tag = new Tag(req.body);
 
-    res.json(tag);
-  });
-});
+      tag.save(function(err, tag) {
+        if (err) { return next(err); }
 
-router.get('/:tag', function(req, res) {
-  res.json(req.tag);
-});
-
-router.param('tag', function(req, res, next, name) {
-  var query = Tag.find({name: new RegExp(name, 'i')});
-
-  query.exec(function(err, tag) {
-    if (err) { return next(err); }
-    if (!tag) {
-      return next(new Error('Impossible de trouver le tag demandé'));
+        res.json(tag);
+      });
     }
-
-    req.tag = tag;
-    return next();
+  }, function() {
+    return res.status(500).json({message: 'Une erreur est survenue.'});
   });
 });
 

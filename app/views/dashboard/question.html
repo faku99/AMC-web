@@ -1,16 +1,189 @@
 <!DOCTYPE html>
 
 <div>
-  <h2>{{ question.title }}</h2>
+  <h4>
+    <a ui-sref="list" class="previous">
+      <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;
+      Retour à la liste des questions</a>
+  </h4>
   <div class="jumbotron">
-    Question créée par <a>{{ question.author }}</a> le {{ question.date }}
-    <br>
-    Type : {{ question.type }}
-    <br>
-    Réponses :
-    <div ng-repeat="answer in question.answers">
-      <font color="green" ng-show="question.corrects.indexOf($index) > -1">{{ answer }}</font>
-      <font color="red" ng-show="question.corrects.indexOf($index) === -1">{{ answer }}</font>
+
+    <small class="modified-on pull-right" ng-show="question.mDate">Question modifiée le {{ question.plainmDate }}</small>
+
+    <div class="container">
+
+    <div ng-show="errorMessage">
+      <div class="col-lg-offset-4 col-lg-4 alert alert-danger">
+        <center><span> {{ errorMessage }} </span></center>
+      </div>
     </div>
+
+    <!-- Zone de succès qui s'affiche seulement si la question a bien été créée -->
+    <div ng-show="successMessage">
+      <div class="col-lg-offset-4 col-lg-4 alert alert-success">
+        <center><span> {{ successMessage }} </span></center>
+      </div>
+    </div>
+
+    <!-- Form pour modifier une question -->
+    <form class="form-horizontal col-lg-12" ng-submit="editQuestion()" name="form" novalidate>
+
+      <!-- Titre -->
+      <div class="form-group has-feedback">
+        <label class="col-lg-1 control-label">Titre</label>
+
+        <div class="col-lg-10">
+          <textarea class="form-control" type="text" name="title" rows="1" ng-model="question.title" required></textarea>
+        </div>
+
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group">
+        <label for="tags" class="col-sm-1 control-label">Tags</label>
+        <div class="col-sm-10">
+          <tags-input ng-model="question.tags">
+            <auto-complete source="loadTags($query)"></auto-complete>
+          </tags-input>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="form-group">
+        <label class="control-label col-lg-1">Type</label>
+        <div class="col-lg-10 form-control-static">
+          {{ question.type }}
+        </div>
+      </div>
+
+      <!-- Si la question est de type 'QCM' -->
+      <div class="form-group" ng-show="question.type === 'QCM'" id="QCM" style="padding-top: 15px;">
+        <label for="answers" class="col-md-1 control-label">Réponses</label>
+        <div id="answers" class="col-md-10">
+          <div class="input-group" ng-repeat="answer in question.answers" style="padding-bottom: 5px;">
+
+              <span class="input-group-btn">
+                <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
+                  <font color="red" ng-hide="answer.correct">Fausse</font>
+                  <font color="green" ng-show="answer.correct">Juste</font>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dd-type" ng-click="answer.correct = true">Juste</a></li>
+                  <li><a class="dd-type" ng-click="answer.correct = false">Fausse</a></li>
+                </ul>
+              </span>
+              <input type="text" class="form-control" ng-model="answer.title">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="deleteAnswer($index)">
+                  <span class="glyphicon glyphicon-remove remove"></span>
+                </button>
+              </span>
+
+          </div>
+
+
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="btn btn-default dropdown-toggle dd-correct" type="button" data-toggle="dropdown">
+                {{ getCorrect() }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dd-type" ng-click="answer.correct = true">Juste</a></li>
+                <li><a class="dd-type" ng-click="answer.correct = false">Fausse</a></li>
+              </ul>
+            </span>
+            <input type="text" class="form-control" ng-model="answer.title" ng-keyup="$event.keyCode == 13 && addAnswer()">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="addAnswer()">
+                <span class="glyphicon glyphicon-plus" style="color: #22BF22"></span>
+              </button>
+            </span>
+          </div>
+
+          <div class="text-warning" ng-show="showButton()">
+            Vous devez ajouter au moins une réponse juste et une réponse fausse
+          </div>
+        </div>
+      </div>
+
+      <!-- Si la question est de type 'Vrai/Faux' -->
+      <div class="col-lg-offset-5 col-lg-4" ng-show="question.type === 'Vrai/Faux'">
+        <div class="radio radio-success radio-inline col-lg-2">
+          <input type="radio" id="radioTrue" ng-model="VFAnswer" ng-value="true">
+          <label for="radioTrue">Vrai</label>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="radio radio-danger radio-inline col-lg-2">
+          <input type="radio" id="radioFalse" ng-model="VFAnswer" ng-value="false">
+          <label for="radioFalse">Faux</label>
+        </div>
+      </div>
+
+      <!-- Si la question est de type 'ouverte' -->
+      <div class="form-group" ng-show="question.type === 'Question ouverte'" style="padding-top: 15px">
+        <label for="bareme" class="col-lg-1 control-label" style="margin-left: -15px">
+          Barème
+        </label>
+        <div id="bareme" class="col-lg-10">
+          <div ng-repeat="answer in question.answers | orderBy:'+points'" style="padding-bottom: 20px;">
+            <div class="col-lg-5">
+              <input type="text" class="form-control" ng-model="answer.title">
+            </div>
+            <div class="col-lg-offset-1 col-lg-6">
+              <label for="points" class="col-lg-2 control-label">
+                Points
+              </label>
+              <div id="points" class="col-lg-9 input-group" style="padding-left: 15px">
+                <input type="number" class="form-control" ng-model="answer.points">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" ng-click="deleteAnswer($index)">
+                    <span class="glyphicon glyphicon-remove remove"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <br />
+          </div>
+          <div style="padding-top: 20px;">
+            <div class="col-lg-5">
+              <input type="text" class="form-control" ng-model="openAnswer.title" placeholder="Description">
+            </div>
+            <div class="col-lg-offset-1 col-lg-6">
+              <label for="nPoints" class="col-lg-2 control-label">
+                Points
+              </label>
+              <div id="nPoints" class="col-lg-6">
+                <input type="number" class="form-control" ng-model="openAnswer.points">
+              </div>
+              <div class="col-lg-4">
+                <button type="button" class="btn btn-primary" ng-click="addOpenAnswer()">Ajouter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <br>
+
+      <div class="form-group">
+        <div class="col-lg-offset-1 col-lg-10">
+          <button class="btn btn-primary" type="submit" ng-disabled="showButton()">Modifier</button>
+          <button class="btn btn-danger pull-right" type="button" ng-click="deleteQuestion()">Supprimer</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
   </div>
 </div>
+
+<script>
+	$(':input').not('textarea').not('button').keypress(function(event) {
+		return event.keyCode !== 13;
+	});
+	$('.dropdown-toggle').dropdown();
+</script>

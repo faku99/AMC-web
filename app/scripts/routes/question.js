@@ -13,7 +13,9 @@ var Question = mongoose.model('Question');
 var jwt = require('express-jwt');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
-router.get('/', function(req, res, next) {
+var moment = require('moment');
+
+router.get('/all', function(req, res, next) {
   Question.find(function(err, questions) {
     if (err) { return next(err); }
 
@@ -21,7 +23,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.post('/', auth, function(req, res, next) {
+router.post('/create', auth, function(req, res, next) {
   if (!req.body.title || req.body.title === '') {
     return res.status(400).json({
       message: 'Veuillez donner un titre à votre question'
@@ -29,12 +31,32 @@ router.post('/', auth, function(req, res, next) {
   }
 
   var question = new Question(req.body);
-  question.author = req.payload.username;
+
+  question.author     = req.payload.username;
+  question.plaincDate = moment().format('DD/MM/YY [à] HH:mm');
+  question.plainmDate = '';
+  question.cDate      = Date.now();
+  question.mDate      = null;
+  question.public     = false;
 
   question.save(function(err, question) {
     if (err) { return next(err); }
 
     return res.json(question);
+  });
+});
+
+router.post('/edit', function(req, res, next) {
+  Question.update({_id: req.body._id}, {
+    title       : req.body.title,
+    tags        : req.body.tags,
+    answers     : req.body.answers,
+    plainmDate  : moment().format('DD/MM/YY [à] HH:mm'),
+    mDate       : Date.now()
+  }).then(function() {
+    res.json(req.body);
+  }, function(err) {
+    return next(err);
   });
 });
 

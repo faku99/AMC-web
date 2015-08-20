@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <div>
 	<h2>Questions</h2>
-	<span class="glyphicon glyphicon-dashboard bg-fade"></span>
 	<div class="jumbotron">
 		<div class="container">
 			<table class="table table-hover table-vcenter">
@@ -14,10 +13,10 @@
 		        </a>
 		      </th>
 		      <th>
-		        <a ng-click="sortType = 'seconds'; sortReverse = !sortReverse" class="sort">
+		        <a ng-click="sortType = 'cDate'; sortReverse = !sortReverse" class="sort">
 		          Date
-		          <span ng-show="sortType == 'seconds' && !sortReverse" class="glyphicon glyphicon-sort-by-order"></span>
-		          <span ng-show="sortType == 'seconds' && sortReverse" class="glyphicon glyphicon-sort-by-order-alt"></span>
+		          <span ng-show="sortType == 'cDate' && !sortReverse" class="glyphicon glyphicon-sort-by-order"></span>
+		          <span ng-show="sortType == 'cDate' && sortReverse" class="glyphicon glyphicon-sort-by-order-alt"></span>
 		        </a>
 		      </th>
 		      <th>Tags</th>
@@ -33,8 +32,8 @@
 
 		    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchFilter"
 		        ng-show="currentUser().username === question.author">
-		      <td>{{ question.title }} ({{ question._id }})</td>
-		      <td>{{ question.date }}</td>
+		      <td>{{ question.title }}</td>
+		      <td>{{ question.plaincDate }}</td>
 		      <td>
 		        <div ng-repeat="tag in question.tags | orderBy:'+'">
 		          <span class="label label-default">{{ tag }}</span>
@@ -42,9 +41,9 @@
 		      </td>
 		      <td>
 		        <center>
-		          <a href="http://localhost:3000/#/dashboard/question/{{ question._id }}" class="btn btn-primary">Voir</a>
-		          &nbsp;
-		          <a ng-click="removeQuestion(question)"><span class="glyphicon glyphicon-remove remove" title="Supprimer"></span></a>
+		          <a ui-sref="question({questionId : question._id})" class="btn btn-primary">Voir</a>
+		          <!--&nbsp;
+		          <a ng-click="removeQuestion(question)"><span class="glyphicon glyphicon-remove remove" title="Supprimer"></span></a>-->
 		        </center>
 		      </td>
 		    </tr>

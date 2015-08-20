@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+var config = require('../config/config');
 
 /*
  * Schéma MongoDB pour les utilisateurs
@@ -37,12 +38,11 @@ UserSchema.methods.generateJWT = function() {
   var exp = new Date(today);
   exp.setDate(today.getDate() + 60);
 
-  //TODO: Changer le 'SECRET' pour quelque chose de plus compliqué et surtout le stocker hors du programme
   return jwt.sign({
     _id: this._id,
     username: this.username,
     exp: parseInt(exp.getTime() / 1000),
-  }, 'SECRET');
+  }, config.secretKey);
 };
 
 mongoose.model('User', UserSchema);
