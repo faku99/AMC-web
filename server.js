@@ -42,7 +42,3 @@ app.use('/question', questionRoute);
 app.use('/tags', tagsRoute);
 
 module.exports = app;
-
-app.listen(3000, function() {
-  console.log('Started express web server on http://localhost:3000');
-});

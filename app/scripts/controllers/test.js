@@ -2,12 +2,11 @@
 
 angular.module('AMC-web')
 
-  .controller('TestCtrl', [
-    '$scope',
+  .controller('TestCtrl',
 
     function($scope) {
 
       $scope.hello = 'Hello World !';
 
     }
-  ]);
+  );

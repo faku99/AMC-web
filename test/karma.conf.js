@@ -17,12 +17,13 @@ module.exports = function(config) {
       // bower:js
       '../bower_components/jquery/dist/jquery.js',
       '../bower_components/angular/angular.js',
-      '../bower_components/bootstrap/dist/js/bootstrap.js',
-      '../bower_components/ui-router/release/angular-ui-router.js',
       '../bower_components/angular-animate/angular-animate.js',
-      '../bower_components/ng-tags-input/ng-tags-input.js',
+      '../bower_components/angular-i18n/angular-locale_fr-fr.js',
       '../bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       '../bower_components/angular-prompt/dist/angular-prompt.js',
+      '../bower_components/bootstrap/dist/js/bootstrap.js',
+      '../bower_components/ng-tags-input/ng-tags-input.js',
+      '../bower_components/ui-router/release/angular-ui-router.js',
       '../bower_components/angular-mocks/angular-mocks.js',
       // endbower
       '../app/scripts/**/*.js',

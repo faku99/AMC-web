@@ -2,7 +2,7 @@
 
 angular.module('AMC-web')
 
-  .controller('CreateCtrl', [
+  .controller('CreateQuestionCtrl', [
     '$scope', 'auth', 'questions', 'requests', 'tags',
 
     function($scope, auth, questions, requests, tags) {
