@@ -1,26 +1,20 @@
-## Ani Theme - Free AngularJS Dashboard Starter Theme
+## AMC-web
 
-## [Demo](http://rawgit.com/start-angular/ani-theme/master/dist/index.html)
-
-Ani Theme is a Boilerplate for Animated AngularJS Starter Theme written with Bootstrap LESS. Powered by Gulp.
-![Preview](/examples/preview.png)
-
-Find out more [Free Angular Themes at StartAngular.com](http://www.startangular.com/).
-
-## Installation
-1. Clone this project or Download that ZIP file
-2. Make sure you have [bower](http://bower.io/), [gulp](https://www.npmjs.com/package/gulp) and  [npm](https://www.npmjs.org/) installed globally
-3. On the command prompt run the following commands
-- cd `project-directory`
-- `bower install`
-- `npm install`
-- `gulp serve` - For development mode
-- `gulp build` - concat, minify and generate the files for deployment
+## [Demo](https://damp-journey-1990.herokuapp.com)
 
 
-### Goodness of Bootstrap Less
-In the source, we have the less files of Bootstrap attached and the variables have been updated to create this theme. You can change the variable in the less file. Animation and Transitions are in separate less file.   
+### AMC-web is a web implementation of the software [AMC(Auto Multiple Choice)](http://home.gna.org/auto-qcm/).
 
-### Automation tools
+The first purpose of this project is be able to create questions from which we can create exams and generate a .tex file so it can be imported in AMC software for marking and other stuff.
 
-- [Gulp](http://gulpjs.com/)
+
+### At the moment, the following features are supported :
+
+* Register and login
+* Question creation
+* Question listing
+* Exam creation
+* LaTeX generation
+
+
+Anyway, the implementation of those features is not done at 100%. Currently working on it.
