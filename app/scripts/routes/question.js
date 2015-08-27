@@ -10,13 +10,15 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Question = mongoose.model('Question');
 
+var config = require('../config/config');
+
 var jwt = require('express-jwt');
-var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+var auth = jwt({secret: config.secretKey, userProperty: 'payload'});
 
 var moment = require('moment');
 
-router.get('/all', function(req, res, next) {
-  Question.find(function(err, questions) {
+router.get('/all', auth, function(req, res, next) {
+  Question.find({author: req.payload.username}, function(err, questions) {
     if (err) { return next(err); }
 
     res.json(questions);

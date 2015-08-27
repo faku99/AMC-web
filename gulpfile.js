@@ -112,11 +112,13 @@ gulp.task('express', ['styles'], function() {
   var registerRoute = require('./app/scripts/routes/register');
   var questionRoute = require('./app/scripts/routes/question');
   var tagsRoute = require('./app/scripts/routes/tags');
+  var examRoute = require('./app/scripts/routes/exam');
   app.use('/', routes);
   app.use('/login', loginRoute);
   app.use('/register', registerRoute);
   app.use('/question', questionRoute);
   app.use('/tags', tagsRoute);
+  app.use('/exam', examRoute);
 
   module.exports = app;
 

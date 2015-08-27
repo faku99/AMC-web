@@ -53,10 +53,14 @@
     "ejs": "^2.3.3",
     "express": "^4.13.3",
     "express-jwt": "^3.0.1",
+    "fs-extra": "^0.23.1",
     "jsonwebtoken": "^5.0.4",
+    "latinize": "^0.2.0",
     "moment": "^2.10.6",
     "mongoose": "^4.1.1",
     "passport": "^0.2.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "replace": "^0.3.0",
+    "serve-static": "^1.10.0"
   }
 }

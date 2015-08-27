@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<div>
+  <h2>Créer un examen</h2>
+
+  <div class="jumbotron">
+    <div class="container">
+
+      <div class="col-lg-offset-4 col-lg-4 alert alert-danger" ng-show="errorMessage">
+        <center>{{ errorMessage }}</center>
+      </div>
+
+
+      <div ng-show="successMessage">
+        <div class="col-lg-offset-3 col-lg-6 alert alert-success">
+          <center>
+            {{ successMessage }}
+          </center>
+        </div>
+
+        <div class="col-lg-offset-2 col-lg-8" style="margin-top: 30px">
+          <button class="btn btn-success col-lg-5" ng-click="download()">Télécharger le fichier LaTeX</button>
+          <button class="btn btn-primary pull-right col-lg-5" ng-click="successMessage = ''">Créer un autre examen</button>
+        </div>
+      </div>
+
+      <form class="form form-horizontal col-lg-12" ng-submit="submit()" ng-hide="successMessage">
+
+        <div class="control-group col-lg-6">
+          <label class="control-label col-lg-2" for="matiere">Matière</label>
+          <div class="controls col-lg-10" id="matiere">
+            <input type="text" class="form-control" ng-model="exam.matiere" required>
+          </div>
+        </div>
+
+        <div class="control-group col-lg-6">
+          <label class="control-label col-lg-5" for="date">Date de l'examen</label>
+          <div class="controls col-lg-7 input-group" id="date">
+            <input  type="text" class="form-control" ng-model="exam.date" required placeholder="jj/mm/aaaa"
+                    is-open="datePicker.opened" min-date="datePicker.minDate" datepicker-options="dateOptions"
+                    date-disabled="datePicker.disabled(date, mode)" datepicker-popup="dd/MM/yyyy" on-open-focus="false" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="datePicker.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-lg-12" style="height: 20px;"></div>
+
+        <div class="control-group col-lg-6">
+          <label class="control-label col-lg-2" for="duration">Durée</label>
+          <div class="controls col-lg-8" id="duration">
+            <input type="number" class="form-control" ng-model="exam.duration" placeholder="60" required>
+          </div>
+          <label class="control-label col-lg-2 left-label" for="duration">minutes</label>
+        </div>
+
+        <div class="control-group col-lg-6">
+          <label class="control-label col-lg-6" for="exemplaires">Nombre d'exemplaires</label>
+          <div class="controls col-lg-6" id="exemplaires">
+            <input type="number" class="form-control pull-right" ng-model="exam.exemplaires" placeholder="10" required>
+          </div>
+        </div>
+
+        <div class="col-lg-12" style="height: 30px;"></div>
+
+        <div class="control-group col-lg-12">
+          <label class="control-label col-lg-1" for="rules">Consignes</label>
+          <div class="controls col-lg-11" id="rules">
+            <textarea type="text" class="form-control" ng-model="exam.rules" rows="4" required></textarea>
+          </div>
+        </div>
+
+        <div class="col-lg-12" style="height: 20px;"></div>
+
+        <div class="control-group col-lg-12">
+          <label class="control-label col-lg-1" for="type">Type</label>
+          <div class="controls col-lg-11" id="type">
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                {{ exam.type ? exam.type : 'Choisir' }}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li ng-repeat="type in types">
+                  <a class="dd-type" ng-click="exam.type = type">{{ type }}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="description text-warning" ng-show="exam.type">
+              {{ getDescription(exam.type) }}
+            </div>
+          </div>
+        </div>
+
+        <hr class="col-lg-12" style="margin: 30px auto;" />
+
+        <div class="control-group col-lg-6">
+          <label class="control-label col-lg-2" for="search">Chercher</label>
+          <div class="controls col-lg-10" id="search">
+            <input type="text" class="form-control" ng-model="search">
+          </div>
+        </div>
+        <div class="control-group col-lg-6">
+          <div class="form-control-static col-lg-5" style="margin-left: -30px">
+            <i class="glyphicon glyphicon-arrow-right"></i>
+            &nbsp; {{ searchResult() }} résultats trouvés
+          </div>
+          <button class="btn btn-info col-lg-5 col-lg-offset-1 pull-right" type="button" ng-click="selectAll()" ng-hide="allSelected" ng-disabled="!search || searchResult() <= 0">Tout sélectionner</button>
+          <button class="btn btn-info col-lg-5 col-lg-offset-1 pull-right" type="button" ng-click="selectAll()" ng-show="allSelected" ng-disabled="!search || searchResult() <= 0">Tout désélectionner</button>
+          <button class="btn btn-primary pull-right" type="button" ng-click="collapse = !collapse" ng-disabled="!search || searchResult() <= 0">Voir</button>
+        </div>
+
+        <div class="col-lg-12" collapse="collapse" style="padding-top: 30px;">
+          <table class="table table-hover table-vcenter">
+            <tr ng-repeat="question in filter | orderBy:sortType:sortReverse">
+    		      <td>{{ question.title }}</td>
+    		      <td>{{ question.plaincDate }}</td>
+    		      <td>
+    		        <div ng-repeat="tag in question.tags | orderBy:'+'">
+    		          <span class="label label-default">{{ tag }}</span>
+    		        </div>
+    		      </td>
+    		      <td>
+    		        <center>
+    		          <input type="checkbox" ng-model="question.selected">
+    		        </center>
+    		      </td>
+    		    </tr>
+          </table>
+        </div>
+
+        <div class="control-group col-lg-12" style="padding-top: 50px;">
+          <div class="col-lg-offset-1" style="padding-left: 14px">
+            <button class="btn btn-primary">Créer</button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

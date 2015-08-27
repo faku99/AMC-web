@@ -8,7 +8,9 @@ angular
     'ui.bootstrap',
     'cgPrompt'
   ])
-  .config(function($stateProvider, $urlRouterProvider) {
+  .config(function($compileProvider, $stateProvider, $urlRouterProvider) {
+
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
     $urlRouterProvider.when('/dashboard', '/dashboard/create');
     $urlRouterProvider.otherwise('/login');
@@ -65,17 +67,17 @@ angular
               }
             }
           })
-          .state('test', {
-            url         : '/test',
+          .state('exam', {
+            url         : '/exam',
             parent      : 'dashboard',
-            templateUrl : 'views/dashboard/tests/test.html',
-            controller  : 'TestCtrl'
+            templateUrl : 'views/dashboard/exams/exams.html',
+            controller  : 'ExamCtrl'
           })
-          .state('createTest', {
-            url         : '/test/create',
+          .state('createExam', {
+            url         : '/exam/create',
             parent      : 'dashboard',
-            templateUrl : 'views/dashboard/tests/create.html',
-            controller  : 'CreateTestCtrl',
+            templateUrl : 'views/dashboard/exams/create.html',
+            controller  : 'CreateExamCtrl',
             resolve     : {
               postPromise : function(questions) {
                 return questions.getAll();

@@ -1,0 +1,43 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[francais,bloc,completemulti]{automultiplechoice}
+\begin{document}
+
+\exemplaire{__NUM_EXEMPLAIRES__}{
+
+%%% debut de l'en-tête des copies :
+
+\noindent{\bf QCM  \hfill __MATIERE__}
+
+\vspace*{.5cm}
+\begin{minipage}{.4\linewidth}
+\centering\large\bf Test\\ Examen du __DATE__\end{minipage}
+\champnom{\fbox{
+                \begin{minipage}{.5\linewidth}
+                  Nom et prénom :
+
+                  \vspace*{.5cm}\dotfill
+                  \vspace*{1mm}
+                \end{minipage}
+         }}
+
+\begin{center}\em
+Durée : __DURATION__ minutes. \\
+
+__RULES__
+
+\end{center}
+\vspace{1ex}
+
+%%% fin de l'en-tête
+
+__QUESTIONS__
+
+\clearpage
+
+}
+
+\end{document}

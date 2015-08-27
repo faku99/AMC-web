@@ -30,8 +30,7 @@
 		      </th>
 		    </tr>
 
-		    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchFilter"
-		        ng-show="currentUser().username === question.author">
+		    <tr ng-repeat="question in questions | orderBy:sortType:sortReverse | filter:searchFilter">
 		      <td>{{ question.title }}</td>
 		      <td>{{ question.plaincDate }}</td>
 		      <td>
